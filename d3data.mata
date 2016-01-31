@@ -3,9 +3,10 @@ qui: mata:
 
 // Declares function to load data and expose the data, variable names, variable 
 // labels, and value labels 
-class d3 scalar d3data( string scalar filenm, string scalar varnm, |		 ///   
-						string scalar datanm, string scalar vallabs,		 ///
-						string scalar varlabs, string scalar stvarnames) {
+class d3 scalar d3data( string scalar filenm, string scalar varnm, 			 ///   
+						string scalar callback, | string scalar datanm, 	 ///   
+						string scalar vallabs, string scalar varlabs, 	 	 ///   
+						string scalar stvarnames) {
 
 	// Check the file name passed to the function					
 	if (pathsuffix(filenm) != ".json" & pathsuffix(filenm) != "") {
@@ -65,10 +66,11 @@ class d3 scalar d3data( string scalar filenm, string scalar varnm, |		 ///
 		"var " + varnm + " = d3.json(" + filenm + 
 			", function(error, json) {" + json.nlindent + 
 			"if (error) return console.warn(error);" + json.nlindent + 
-			data + " = json.data.values," + json.nlindent + 
-			vall + `" = json["value labels"],"' + json.nlindent + 
-			varl + `" = json["variable labels"],"' + json.nlindent + 
-			varnames + `" = json["variable names"];"' + char((10)) + "})")
+			data + " = json.data," + json.nlindent + 
+			vall + `" = json.valueLabels,"' + json.nlindent + 
+			varl + `" = json.variableLabels,"' + json.nlindent + 
+			varnames + `" = json.variableNames;"' + char((10)) + "})" + 
+			char((10, 10)) + callback)
 			
 	// Return the d3 object containing the data callback function
 	return(json)

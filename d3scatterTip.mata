@@ -269,7 +269,7 @@ void d3scatterTip(string scalar filename, string scalar dataset,
 	the function defined as a the callback to the .json() method.  
 	char((10, 32, 32)) inserts a new line followed by two spaces to indent the 
 	lines slightly as content is added. */
-	json.init().jsfree("d3").json(dataset, `"function(error, json) {"' + char((10, 32, 32)) + `"if (error) return console.warn(error);"' + char((10, 32, 32)) + `"data = json.data.values;"' + char((10, 32, 32)) + `"varlabels = json["variable labels"], "' + char((10, 32, 32)) + `"valueLabels = json["value labels"], "' + char((10, 32, 32)) + `"varnames = json["variable names"];"' + char((10, 32, 32)) + xDomain + char((10, 32, 32)) + yDomain + char((10, 32, 32)) + svgXAxis.complete() + char((10, 32, 32)) + svgYAxis.complete() + char((10, 32, 32)) + svgtip.complete() + legendString + char((10)) + `"}"')
+	json.init().jsfree("d3").json(dataset, `"function(error, json) {"' + char((10, 32, 32)) + `"if (error) return console.warn(error);"' + char((10, 32, 32)) + `"data = json.data;"' + char((10, 32, 32)) + `"varlabels = json["variableLabels"], "' + char((10, 32, 32)) + `"valueLabels = json["valueLabels"], "' + char((10, 32, 32)) + `"varnames = json["variableNames"];"' + char((10, 32, 32)) + xDomain + char((10, 32, 32)) + yDomain + char((10, 32, 32)) + svgXAxis.complete() + char((10, 32, 32)) + svgYAxis.complete() + char((10, 32, 32)) + svgtip.complete() + legendString + char((10)) + `"}"')
 
 	/* Object that creates a new JavaScript function named scatter that accepts
 	four arguments: an x-axis variable, a y-axis variable, a variable indicating 
