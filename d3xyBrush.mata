@@ -1,16 +1,48 @@
-// Example class to construct a linked brush for a scatter plot matrix.  
+// Example functions to construct a linked brush for a scatter plot matrix.  
 // Based on the bl.ock at http://bl.ocks.org/mbostock/4063663
 
 // Start Mata session
 mata:
 
+// Constructs the dispacting variable
+class d3 scalar xyBrushDispatcher(| string scalar graphObj) {
+
+	// Declares a member to construct the d3 object
+	class d3 scalar brush
+	
+	// If no arguments passed assume the graph is defined as d3.svg...
+	if (args() == 0) {
+	
+		// Creates the d3 object with the necessary callbacks to the brush functions
+		brush.init("brush").svg()
+
+	} // End IF Block for no argument case
+	
+	// If user passes a value use that as the basis for constructing the brush variable
+	else {
+	
+		// Initialize the object with a different name
+		brush.init().jsfree("var brush = " + graphObj)
+	
+	} // End else block for user specified graph object name
+
+	// Adds the callback listeners
+	brush.brush().x("obj_x").y("obj_y").on("brushstart", "obj_brushstart").on("brush", "obj_brushmove").on("brushend", "obj_brushend")
+	
+	// Returns the object
+	return(brush)
+
+} // End function declaration	
+
 // Defines a function that will return all three of the brush functions from 
 // the example referenced above
-class d3 rowvector xyBrush(string scalar extentObject, string scalar argname, | ///   
-                           string scalar varname, string scalar graphObject) {
+class d3 rowvector xyBrushFunctions(string scalar extentObject, 			 ///   
+									string scalar argname, |				 ///   
+									string scalar varname, 					 ///   
+									string scalar graphObject) {
 
 	// Declares variables used to store the functions that will be returned
-	class d3 scalar brushStart, brushMove, brushEnd
+	class d3 scalar brush, brushStart, brushMove, brushEnd
 	
 	// Declares variables that will be used to test/populate optional arguments
 	string scalar varnm, graphobj
@@ -27,7 +59,7 @@ class d3 rowvector xyBrush(string scalar extentObject, string scalar argname, | 
 	
 	// Otherwise, use the name passed by the end user
 	else graphobj = graphObject
-
+	
 	// Call the xyBrushStart function
 	brushStart = xyBrushStart(extentObject, argname, varnm)
 
