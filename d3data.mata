@@ -1,12 +1,12 @@
 // Start Mata session
-qui: mata:
+mata:
 
 // Declares function to load data and expose the data, variable names, variable 
 // labels, and value labels 
-class d3 scalar d3data( string scalar filenm, string scalar varnm, 			 ///   
-						string scalar callback, | string scalar datanm, 	 ///   
-						string scalar vallabs, string scalar varlabs, 	 	 ///   
-						string scalar stvarnames) {
+class d3 scalar d3data( string scalar filenm, class d3 scalar callback, |	 ///   
+						string scalar datanm, string scalar vallabs, 		 ///   
+						string scalar varlabs, string scalar stvarnames,	 ///   
+						string scalar jsvarnm) {
 
 	// Check the file name passed to the function					
 	if (pathsuffix(filenm) != ".json" & pathsuffix(filenm) != "") {
@@ -17,63 +17,49 @@ class d3 scalar d3data( string scalar filenm, string scalar varnm, 			 ///
 	} // End IF Block for filename specification check
 	
 	// Declares member variables used in the function					
-	class d3 scalar json, datavars
+	class d3 scalar json, datavars, retval
 	
-	// Declares string members used when validating arguments and constructing 
-	// the string used to construct the the d3 object
-	string scalar vall, varl, varnames, data
+	string colvector lines
 	
-	// Initializes the d3 object used to expose data objects outside of the callback
-	datavars = d3()
-	
-	// Initializes the d3 object used to read the data
-	json = d3()
+	if (jsvarnm == "") jsvarnm = "d3MataGraph"
 	
 	// If value label argument not passed, the value labels will be accessible 
 	// under the variable named valueLabels
-	if (vallabs == "") vall = "valueLabels"
-	
-	// Else accessible with the argument passed to the vallabs parameter
-	else vall = vallabs
+	if (vallabs == "") vallabs = "valueLabels"
 	
 	// If variable label argument not passed, the variable labels will be 
 	// accessible under the variable named varlabels
-	if (varlabs == "") varl = "varlabels"
-	
-	// Else accessible with the argument passed to the varlabs parameter
-	else varl = varlabs
+	if (varlabs == "") varlabs = "varlabels"
 	
 	// If variable names argument not passed, the variable names will be 
 	// accessible under the variable named varnames
-	if (stvarnames == "") varnames = "varnames"
-	
-	// Else, variable names accessible under the name passed to the stvarnames 
-	// parameter
-	else varnames = stvarnames
+	if (stvarnames == "") stvarnames = "varnames"
 	
 	// If user does not specify name for JS data object use the name data
-	if (datanm == "") data = "data"
-	
-	// Else, data accessible under the variable named by the datanm parameter
-	else data = datanm
+	if (datanm == "") datanm = "data"
 	
 	// Creates a d3 object used to make the data, value labels, variable labels, 
 	// and variable names accessible outside of the callback that loads the data
-	datavars.init().jsfree("var " + data + ", " + vall + ", " + varl + ", " + varnames)
+	datavars.init().jsfree("var " + datanm + ", " + vallabs + ", " + varlabs + ", " + stvarnames)
 	
+	datavars.complete()
+	
+	lines = ("if (error) return console.warn(error);" + json.nlindent \
+				datanm + " = json.data," + json.nlindent \
+				vallabs + `" = json.valueLabels,"' + json.nlindent \
+				varlabs + `" = json.variableLabels,"' + json.nlindent \
+				stvarnames + `" = json.variableNames;"' + json.nlindent \
+				callback.complete())
+				
 	// Start constructing the function
-	json.init().jsfree(datavars.complete() + char((10, 10)) +
-		"var " + varnm + " = d3.json(" + filenm + 
-			", function(error, json) {" + json.nlindent + 
-			"if (error) return console.warn(error);" + json.nlindent + 
-			data + " = json.data," + json.nlindent + 
-			vall + `" = json.valueLabels,"' + json.nlindent + 
-			varl + `" = json.variableLabels,"' + json.nlindent + 
-			varnames + `" = json.variableNames;"' + char((10)) + "})" + 
-			char((10, 10)) + callback)
+	json.init(jsvarnm).json(filenm, lines[1, 1] + lines[2, 1] + lines[3, 1] +  ///   
+								  lines[4, 1] + lines[5, 1] + lines[6, 1])
 			
+	// Constructs the return value object to be passed back 		
+	retval.init().jsfree(datavars.complete() + retval.dblnl + json.complete())
+	
 	// Return the d3 object containing the data callback function
-	return(json)
+	return(retval)
 			
 } // End Method declaration
 
