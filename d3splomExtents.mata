@@ -5,7 +5,8 @@
 mata:
 
 // Declare function used to filter variables from d3 graphs						  
-class d3 scalar excludeVars(string scalar excludeVars, | string scalar vlname) {
+class d3 scalar excludeVars(string scalar varnm, string scalar excludeVars, | ///   
+							string scalar vlname) {
 
 	// Initializes object for return value
 	class d3 scalar vars
@@ -20,10 +21,7 @@ class d3 scalar excludeVars(string scalar excludeVars, | string scalar vlname) {
 	real i
 	
 	// If no variable list name object passed assume varnames
-	if (vlname == "") varlistName = "varnames"
-	
-	// Otherwise assign varnames to the argument passed to the varlistnm argument
-	else varlistName = vlname + " = varnames"
+	if (vlname == "") vlname = "varnames"
 	
 	// String used to build the filter conditions
 	filter = "obj_function(d) { return "
@@ -54,7 +52,7 @@ class d3 scalar excludeVars(string scalar excludeVars, | string scalar vlname) {
 	} // End Loop over the variables to exclude
 	
 	// Create the d3 class object with the appropriate filter method called on it
-	vars.init().jsfree(varlistName).filter(filter)
+	vars.init().jsfree(varnm + " = " + vlname).filter(filter)
 	
 	// Return the object
 	return(vars)
@@ -62,22 +60,13 @@ class d3 scalar excludeVars(string scalar excludeVars, | string scalar vlname) {
 } // End of function declaration
 
 // Function to create the extents and filtered 
-class d3 scalar varExtents(string scalar vlname, string scalar extObj) {
+class d3 scalar varExtents(string scalar extObj, string scalar vlname) {
 	
 	// Declares object used to contain the return value
 	class d3 scalar traits
 	
 	// Used to organize the lines of the function body
 	string colvector funcbody
-	
-	// Used to identify the name of the variable list variable
-	string scalar varlistName
-	
-	// If no argument passed use varnames
-	if (vlname == "") varlistName = "varnames"
-
-	// Else use the argument value
-	else varlistName = vlname
 	
 	// Defines the lines of the callback body
 	funcbody = ("obj_function(var) {" + traits.nlindent \
@@ -88,7 +77,7 @@ class d3 scalar varExtents(string scalar vlname, string scalar extObj) {
 	traits.init().jsfree(extObj + " = {}; " + traits.dblnl)
 
 	// Adds the method to populate the extent object with the extents of each variable
-	traits.jsfree(varlistName).forEach(funcbody[1, 1] + funcbody[2, 1] + funcbody[3, 1])
+	traits.jsfree(vlname).forEach(funcbody[1, 1] + funcbody[2, 1] + funcbody[3, 1])
 
 	// Returns the object
 	return(traits)
@@ -97,8 +86,8 @@ class d3 scalar varExtents(string scalar vlname, string scalar extObj) {
 
 
 // Defines convenience function that calls the varExtents and excludeVars functions
-class d3 scalar splomVars(string scalar excludeVars, string scalar extObj, | ///   
-						  string scalar vlname) {
+class d3 scalar splomVars(string scalar traitnm, string scalar excludeVars,  ///   
+						  string scalar extObj, | string scalar vlname) {
 	
 	// Declares variables used to store intermediate and returned results
 	class d3 scalar exclusion, extents, retval
@@ -107,16 +96,13 @@ class d3 scalar splomVars(string scalar excludeVars, string scalar extObj, | ///
 	string scalar varlistName
 	
 	// If no name supplied use varnames
-	if (vlname == "") varlistName = "varnames"
+	if (vlname == "") vlname = "varnames"
 
-	// Otherwise use the name supplied by the user
-	else varlistName = vlname
-	
 	// Gets the variable exclusion object
-	exclusion = excludeVars(excludeVars, varlistName)
+	exclusion = excludeVars(traitnm, excludeVars, vlname)
 
 	// Gets the extents object using the excluded variable list
-	extents = varExtents(varlistName, extObj)
+	extents = varExtents(traitnm, extObj)
 	
 	// Puts the results of both objects in the object to be returned
 	retval.init().jsfree(exclusion.complete() + retval.dblnl + extents.getter())

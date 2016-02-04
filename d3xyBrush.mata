@@ -36,8 +36,8 @@ class d3 scalar xyBrushDispatcher(| string scalar graphObj) {
 
 // Defines a function that will return all three of the brush functions from 
 // the example referenced above
-class d3 rowvector xyBrushFunctions(string scalar extentObject, 			 ///   
-									string scalar argname, |				 ///   
+class d3 rowvector xyBrushFunctions(string scalar argname, |				 ///   
+									string scalar extentObject, 			 ///   
 									string scalar varname, 					 ///   
 									string scalar graphObject) {
 
@@ -48,26 +48,23 @@ class d3 rowvector xyBrushFunctions(string scalar extentObject, 			 ///
 	string scalar varnm, graphobj
 	
 	// If no varname is passed, the var declared in the JS will be brushCell
-	if (varname == "") varnm = "brushCell"
-	
-	// Or it will be assigned the name passed by the user
-	else varnm = varname	
+	if (varname == "") varname = "brushCell"
 	
 	// If no graphObject argument is passed we assume there is a JS var named 
 	// svg on which the brush will select observations
-	if (graphObject == "") graphobj = "svg"
+	if (graphObject == "") graphObject = "svg"
 	
-	// Otherwise, use the name passed by the end user
-	else graphobj = graphObject
+	// Check for extent object name
+	if (extentObject == "") extentObject = "domainByTrait"
 	
 	// Call the xyBrushStart function
-	brushStart = xyBrushStart(extentObject, argname, varnm)
+	brushStart = xyBrushStart(extentObject, argname, varname)
 
 	// Call the xyBrushMove function
-	brushMove = xyBrushMove(argname, graphobj)
+	brushMove = xyBrushMove(argname, graphObject)
 
 	// Call the xyBrushEnd function
-	brushEnd = xyBrushEnd(graphobj)
+	brushEnd = xyBrushEnd(graphObject)
 
 	// Return a rowvector with all three of the brush functions
 	return((brushStart, brushMove, brushEnd))
