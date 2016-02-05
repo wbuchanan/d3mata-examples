@@ -1,6 +1,6 @@
 mata:
 
-
+// Class to return a brush and linked scatterplot
 class d3 scalar d3splom(string scalar filename, string scalar vlname, |		 ///   
 						real scalar width, real scalar textSize, 			 ///   
 						real scalar scaleFactor, string scalar excludeVars,  ///   
