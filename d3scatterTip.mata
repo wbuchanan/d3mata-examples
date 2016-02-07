@@ -269,14 +269,14 @@ void d3scatterTip(string scalar filename, string scalar dataset,
 	the function defined as a the callback to the .json() method.  
 	char((10, 32, 32)) inserts a new line followed by two spaces to indent the 
 	lines slightly as content is added. */
-	json.init().jsfree("d3").json(dataset, `"function(error, json) {"' + char((10, 32, 32)) + `"if (error) return console.warn(error);"' + char((10, 32, 32)) + `"data = json.data.values;"' + char((10, 32, 32)) + `"varlabels = json["variable labels"], "' + char((10, 32, 32)) + `"valueLabels = json["value labels"], "' + char((10, 32, 32)) + `"varnames = json["variable names"];"' + char((10, 32, 32)) + xDomain + char((10, 32, 32)) + yDomain + char((10, 32, 32)) + svgXAxis.complete() + char((10, 32, 32)) + svgYAxis.complete() + char((10, 32, 32)) + svgtip.complete() + legendString + char((10)) + `"}"')
+	json.init().jsfree("d3").json(dataset, `"function(error, json) {"' + char((10, 32, 32)) + `"if (error) return console.warn(error);"' + char((10, 32, 32)) + `"data = json.data;"' + char((10, 32, 32)) + `"varlabels = json["variableLabels"], "' + char((10, 32, 32)) + `"valueLabels = json["valueLabels"], "' + char((10, 32, 32)) + `"varnames = json["variableNames"];"' + char((10, 32, 32)) + xDomain + char((10, 32, 32)) + yDomain + char((10, 32, 32)) + svgXAxis.complete() + char((10, 32, 32)) + svgYAxis.complete() + char((10, 32, 32)) + svgtip.complete() + legendString + char((10)) + `"}"')
 
 	/* Object that creates a new JavaScript function named scatter that accepts
 	four arguments: an x-axis variable, a y-axis variable, a variable indicating 
 	how points are grouped, and a variable to use for the tooltip labels.  This 
 	method uses a combination of strings that were previously created, calls to 
 	the printer method, and references to static members of the d3 class. */
-	scatterplot.init().jsfree(marginString + "var scatter = function(xvar, yvar, groups, tip) {" + char((10, 32, 32)) + xString + char((10, 32, 32)) + yString + char((10, 32, 32)) + colorString + char((10, 32, 32)) + d3static.printer((svg, toolTip, data, labels, json)) + scatterplot.d3cr + "}")
+	scatterplot.init().jsfree(marginString + "var scatter = function(xvar, yvar, groups, tip) {" + svg.nlindent + xString + svg.nlindent + yString + svg.nlindent + colorString + svg.nlindent + d3static.printer((svg, toolTip, data, labels, json)) + svg.nl + "}")
 
 	// This takes the variable names passed from the Mata function and inserts 
 	// them into the JavaScript code that will be output from the method.
@@ -285,7 +285,7 @@ void d3scatterTip(string scalar filename, string scalar dataset,
 	d3static.checkValue(labvar) + ")")
 
 	// This populates the HTML script tag object with the java script created above
-	d3graph.setClassArgs(scatterplot.complete() + scatterCall.d3cr + scatterCall.complete())
+	d3graph.setClassArgs(scatterplot.complete() + scatterCall.nl + scatterCall.complete())
 
 	// Now the script tags for the D3js, jQuery, and scatter plot are attached 
 	// to the body HTML tag
