@@ -1,154 +1,23 @@
-<!DOCTYPE>
+<!DOCTYPE html>
  
-<html>
 <meta charset="utf-8">
-
-<!-- Example based on http://bl.ocks.org/mbostock/3887118 -->
-
-<!-- Tooltip example from http://www.d3noob.org/2010/01/adding-tooltips-to-d3js-graph.html -->
-
-<style>
-body {
-  font: 11px sans-serif;
-}
-.axis path,
-.axis line {
-  fill: none;
-stroke: #000;
-shape-rendering: crispEdges;
-}
-.dot {
-  stroke: #000;
-}
-.tooltip {
-  position: absolute;
-  width: 200px;
-  height: 28px;
-  pointer-events: none;
-}
-</style>
-
+<head>
+	<script charset="utf-8" src="//d3js.org/d3.v3.min.js"></script>
+<head>
 <body>
-<script src="http://d3js.org/d3.v3.min.js"></script>
-
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
-
-<script>
-var margin = {top: 50, right: 50, bottom: 50, left: 50},
-  width = 1080 - margin.left - margin.right,
-  height = 780 - margin.top - margin.bottom,
-  xtiPosX = width / 2,
-  xtiPosY = 30 / 2,
-  ytiPosY = -30,
-  ytiPosX = -height / 2;
-
-var scatter = function(xvar, yvar, groups, tip) {
-  var xValue = function(d) { return d[xvar];}, 
-    xScale = d3.scale.linear().range([0, width]), 
-      xMap = function(d) { return xScale(xValue(d));}, 
-     xAxis = d3.svg.axis().scale(xScale).orient("bottom");
-
-  var yValue = function(d) { return d[yvar];}, 
-    yScale = d3.scale.linear().range([height, 0]), 
-      yMap = function(d) { return yScale(yValue(d));}, 
-     yAxis = d3.svg.axis().scale(yScale).orient("left");
-
-  var cValue = function(d) { return d[groups];}, 
-     color = d3.scale.category10();
-
-  var svg = d3.select("body")
-             .append("svg")
-             .attr("width", width + margin.left + margin.right)
-             .attr("height", height + margin.top + margin.bottom)
-             .append("g")
-             .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
-
-var tooltip = d3.select("body")
-                 .append("div")
-                 .attr("class", "tooltip")
-                 .style("opacity", 10);
-
-var data;
-
-var varlabels, valueLabels, varnames;
-
-d3.json("data/auto.json", function(error, json) {
-  if (error) return console.warn(error);
-  data = json.data.values;
-  varlabels = json["variable labels"], 
-  valueLabels = json["value labels"], 
-  varnames = json["variable names"];
-  xScale.domain([d3.min(data, xValue)-1, d3.max(data, xValue)+1]);
-
-  yScale.domain([d3.min(data, yValue)-1, d3.max(data, yValue)+1]);
-
-  svg.append("g")
-   .attr("class", "x axis")
-   .attr("transform", "translate(0," + height + ")")
-   .call(xAxis)
-   .append("text")
-   .attr("class", "label")
-   .attr("x", xtiPosX)
-   .attr("y", 30)
-   .attr("font-size", "14px")
-   .style("text-anchor", "middle")
-   .text(varlabels[xvar]);
-
-  svg.append("g")
-   .attr("class", "y axis")
-   .call(yAxis)
-   .append("text")
-   .attr("class", "label")
-   .attr("transform", "rotate(-90)")
-   .attr("y", ytiPosY)
-   .attr("x", ytiPosX)
-   .style("text-anchor", "end")
-   .text(varlabels[yvar]);
-
-  svg.selectAll(".dot")
-   .data(data)
-   .enter()
-   .append("circle")
-   .attr("class", "dot")
-   .attr("r", 5)
-   .attr("cx", xMap)
-   .attr("cy", yMap)
-   .style("fill", function(d) { return color(cValue(d));})
-   .on("mouseover", function(d) { tooltip.transition()
-   .duration(200)
-   .style("opacity", .9); tooltip.html(d[tip])
-   .style("left", (d3.event.pageX + 5) + "px")
-   .style("top", (d3.event.pageY - 28) + "px");})
-   .on("mouseout", function(d) { tooltip.transition()
-   .duration(500)
-   .style("opacity", 0);});
-var legend = svg.selectAll(".legend")
-                 .data(color.domain())
-                 .enter()
-                 .append("g")
-                 .attr("class", "legend")
-                 .attr("transform", function(d, i) { return "translate(0," + i * 20 + ")";});
-
-legend.append("rect")
-       .attr("x", width - 18)
-       .attr("width", 18)
-       .attr("height", 18)
-       .style("fill", color);
-
-legend.append("text")
-       .attr("x", width - 24)
-       .attr("y", 9)
-       .attr("dy", ".35em")
-       .style("text-anchor", "end")
-       .text(function(d) { return valueLabels[groups][d];});
-
-
-});
-
-
-};
-
-scatter("length", "gear_ratio", "foreign", "make");
-</script>
+	<h1>D3 Mata Examples</h1>	
+	This is a temporary page used to link to existing example pages.
+	<table>
+		<th>
+			<td>Link</td><td>Type</td>
+		</th>
+		<tr>
+			<td><a href="../scatterTip/index.html">Scatterplot</a></td><td>Scatterplot example with tool tip</td>
+		</tr>
+		<tr>
+			<td><a href="../splomExample/index.html">Scatterplot Matrix</a></td><td>Scatterplot matrix with brushing/linking</td>
+		</tr>		
+	</table>
 </body>
-</html>
+</head>
+	
