@@ -22,7 +22,7 @@ class d3 scalar xyBrushDispatcher(| string scalar graphObj) {
 	else {
 	
 		// Initialize the object with a different name
-		brush.init().jsfree("var brush = " + graphObj)
+		brush.init().jsfree("var brush = d3." + graphObj)
 	
 	} // End else block for user specified graph object name
 

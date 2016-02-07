@@ -29,14 +29,14 @@ class d3 scalar d3splom(string scalar filename, string scalar vlname, |		 ///
 		textsize = strofreal(textSize) + "px"
 	}
 	if (missing(width) == 1) grwidth = "960"
-	else grwidth = "obj_" + strofreal(width) 
+	else grwidth = strofreal(width) 
 	if (padding == "") padding = "Math.round(10 + Math.log(100 * Math.pow(" + traitnm + ".length, 2)));"
 
 	if (missing(scaleFactor) == 1) scale = "scaleFactor = " + traitnm + ".length;"
 	else scale = "scaleFactor = " + strofreal(scaleFactor) + ";"
 
 	tref = traitnm + ".length"
-	varExtent = splomVars(traitnm, excludeVars, extObj, vlname)
+	varExtent = splomVars(traitnm, extObj, excludeVars, vlname)
 	if (colorScale == "") color = colorScale()
 	else color = colorScale(colorScale)
 
@@ -60,7 +60,7 @@ class d3 scalar d3splom(string scalar filename, string scalar vlname, |		 ///
 	svg.attr("width", "obj_(size + (padding * 2)) * " + tref)
 	svg.attr("height", "obj_(size + (padding * 2)) * " + tref)
 	svg.append("g")
-	svg.attr("transform", `"obj_"translate(" "' + "padding" + " * " + tref + 
+	svg.attr("transform", `"obj_"translate(" + "' + "padding" + " * " + tref + 
 			`" + ", " + "' + "padding" + " * " + tref + `" + ")" "')
 
 	// Draws the x-axes on the graph
@@ -76,8 +76,8 @@ class d3 scalar d3splom(string scalar filename, string scalar vlname, |		 ///
 	clsyaxis.each("obj_function(d) { y.domain(" + extObj + "[d]); d3.select(this).call(yAxis); }")
 
 	// Calls the plot function and adds the cells to the document
-	cell.init().jsfree("svg").selectAll(".cell")
-	cell.data("obj_cross(varnames, varnames)").enter().append("g")
+	cell.init().jsfree("cell = svg").selectAll(".cell")
+	cell.data("obj_cross(" + traitnm + ", " + traitnm + ")").enter().append("g")
 	cell.attr("class", "cell")
 	cell.attr("transform", `"function(d) { return "translate(" + ("' + tref + " - d.i - 1) * size + " + `""," + d.j * size + ")"; }"')
 	cell.each("obj_plot")
@@ -118,26 +118,26 @@ class d3 scalar d3splom(string scalar filename, string scalar vlname, |		 ///
 			scale + gob.nlindent \
 			"size = width / scaleFactor;" + gob.nlindent \
 			extObj + " = {};" + gob.nlindent \
-			varExtent.complete() + gob.nlindent \ 
-			"padding = " + padding + gob.nlindent \
-			"textsize = " + textsize + gob.nlindent \
-			x.complete() + gob.nlindent \ 
-			y.complete() + gob.nlindent \ 
-			xAxis.complete() + gob.nlindent \
-			yAxis.complete() + gob.nlindent \
-			color.complete() + gob.nlindent \ 
-			brush.complete() + gob.nlindent \ 
-			svg.complete() + gob.nlindent \ 
-			clsxaxis.complete() + gob.nlindent \
-			clsyaxis.complete() + gob.nlindent \
-			cell.complete() + gob.nlindent \
-			cellfilter.complete() + gob.nlindent \
-			cellcall.complete() + gob.nlindent \
+			varExtent.getter() + gob.nlindent \ 
+			"padding = " + padding + ";" + gob.nlindent \
+			`"textsize = ""' + textsize + `"";"' + gob.nlindent \
+			retob.printer(x) + gob.nlindent \ 
+			retob.printer(y) + gob.nlindent \ 
+			retob.printer(xAxis) + gob.nlindent \
+			retob.printer(yAxis) + gob.nlindent \
+			retob.printer(color) + gob.nlindent \ 
+			retob.printer(brush) + gob.nlindent \ 
+			retob.printer(svg) + gob.nlindent \ 
+			retob.printer(clsxaxis) + gob.nlindent \
+			retob.printer(clsyaxis) + gob.nlindent \
+			retob.printer(cell) + gob.nlindent \
+			retob.printer(cellfilter) + gob.nlindent \
+			retob.printer(cellcall) + gob.nlindent \
 			splom.getter() + gob.nlindent \
 			brushFunctions[1, 1].getter() + gob.nlindent \
 			brushFunctions[1, 2].getter() + gob.nlindent \
 			brushFunctions[1, 3].getter() + gob.nlindent \
-			frame.complete() + gob.nl \ "}" + gob.dblnl )
+			retob.printer(frame) + gob.nl \ "}" + gob.dblnl )
 
 	// Makes the body variable an empty string		
 	body = ""			

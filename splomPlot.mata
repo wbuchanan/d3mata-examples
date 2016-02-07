@@ -81,9 +81,9 @@ class d3 scalar splomPlot(string scalar varnm, | string scalar pname, 		 ///
 			 "x.domain(" + extObj + "[p.x]);" + r.nlindent \
 			 "y.domain(" + extObj + "[p.y]);" + r.nlindent \
 			 "var dims = " + sizeObj + " - " + paddingObj + " * 2;" + r.nlindent \ 
-			 rect.complete() + r.nlindent \
-			 text.complete() + r.nlindent \
-			 circle.complete() + r.nl \ 
+			 r.printer(rect) + r.nlindent \
+			 r.printer(text) + r.nlindent \
+			 r.printer(circle) + r.nl \ 
 			 "}" + r.dblnl)
 	
 	// Initializes the return object and passes all of the code/objects to it
