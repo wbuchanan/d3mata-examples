@@ -13,9 +13,6 @@ real scalar right) {
 	// Declares members used if optional args are not passed
 	string scalar h, w, t, b, l, r
 	
-	// Initialize new d3 class object
-	marg = d3()
-	
 	// If no height parameter is supplied use 600
 	if (missing(height) == 1) h = "600"
 	else h = strofreal(height)
