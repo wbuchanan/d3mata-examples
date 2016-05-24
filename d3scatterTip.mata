@@ -20,107 +20,7 @@ void d3scatterTip(string scalar filename, string scalar dataset,
 	real scalar fileConnection
 	string scalar marginString, xString, yString, colorString, legendString, 
 				  xDomain, yDomain
- 
- 	// Object used to load the data set created by a call to jsonio.
-	json = d3()
-
-	// Object that will store the D3 js code used for the scatterplot function
-	scatterplot = d3()
-
-	// Object used to call the JavaScript function defined by the object above
-	scatterCall = d3()
-	
-	
-	// A D3 object to return the x-variable values
-	xValue = d3()
-	
-	// A D3 object used to create the scale for the x-axis
-	xScale = d3()
-	
-	// Stores the mapping function from values to the scale
-	xMap = d3()
-
-	// Creates the x-axis by referencing the xScale javascript object
-	xAxis = d3()
-
-	// D3 class used for constructing more complex JS 
-	d3static = d3()
-
-	// This is the same as the x-axis/values set up but for the y-variable 
-	yValue = d3()
-	yScale = d3()
-	yMap = d3()
-	yAxis = d3()
-
-	// Used to create a function that maps groups onto colors
-	cValue = d3()
-
-	// Used to specify the color scale to use
-	color = d3()
-
-	// A D3 class object used to initialize the svg DOM object
-	svg = d3()
-	
-	// Object to store the tool tip function
-	toolTip = d3()
-
-	// Object to initialize a data object
-	data = d3()
-
-	// Objects that will store variable labels, value labels, and variable names
-	labels = d3()
-
-	// Still working on better way to implement this, but for now, creates 
-	// separate objects to store the three legend components
-	legend = d3()
-	legend2 = d3()
-	legend3 = d3()
-	
-	// Scale domain objects (used to prevent overlapping and/or axis compression
-	xDom = d3()
-	yDom = d3()
-	// Object used to map the data to the graph as circles with tooltip functions 
-	// hard coded as an argument to the .on() method.
-	svgtip = d3()
-	
-	// Objects used to draw the x and y axes
-	svgYAxis = d3()
-	svgXAxis = d3()
-
- 
-	// An HTML doctype tag object
-	doctype = doctype()
-
-	// An HTML html tag object
-	htmltag = html()
-	
-	// An HTML meta tag object
-	meta = meta()
-	
-	// An HTML comment tag
-	headerCmnt1 = comment()
-	
-	// A second HTML comment
-	headerCmnt2 = comment()
-	
-	// An HTML style tag object
-	style = style()
-	
-	// An HTML body tag object
-	htmlbody = body()
-	
-	// An HTML script tag object
-	d3source = script()
-	
-	// An HTML script tag object
-	jquery = script()
-	
-	// An HTML script tag object to store the graph code
-	d3graph = script()
-	
-	// A D3 class object used to store the margins for the graph
-	graphMargins = d3()
-	
+ 	
 	// Sets the character set used 
 	meta.setCharset("utf-8")
 	
@@ -178,20 +78,20 @@ void d3scatterTip(string scalar filename, string scalar dataset,
 	// Any time you need to refer to a JS object, just prepend the argument with 
 	// obj_ and the object reference will be output from the complete/printer 
 	// methods.
-	xScale.init().jsfree("xScale = d3").scale().linear().range("obj_[0, width]")
+	xScale.init("xScale").scale().linear().range("obj_[0, width]")
 	
 	xMap.init().jsfree("xMap = function(d) { return xScale(xValue(d));}")
 
-	xAxis.init().jsfree("xAxis = d3").svg().axis().scale("obj_xScale").orient("bottom")
+	xAxis.init("xAxis").svg().axis().scale("obj_xScale").orient("bottom")
 
 	// Puts all of the x axis/scale code into a single string scalar with proper terminators
 	xString = d3static.cont((xValue, xScale, xMap, xAxis))
 	 
 	// Y variable analogues to the methods called for the x variable
 	yValue.init().jsfree("var yValue = function(d) { return d[yvar];}")
-	yScale.init().jsfree("yScale = d3").scale().linear().range("obj_[height, 0]")
+	yScale.init("yScale").scale().linear().range("obj_[height, 0]")
 	yMap.init().jsfree("yMap = function(d) { return yScale(yValue(d));}")
-	yAxis.init().jsfree("yAxis = d3").svg().axis().scale("obj_yScale").orient("left")
+	yAxis.init("yAxis").svg().axis().scale("obj_yScale").orient("left")
 
 	// Puts all of the x axis/scale code into a single string scalar with proper terminators
 	yString = d3static.cont((yValue, yScale, yMap, yAxis))
@@ -200,7 +100,7 @@ void d3scatterTip(string scalar filename, string scalar dataset,
 	cValue.init().jsfree("var cValue = function(d) { return d[groups];}")
 	
 	// Color scale used for mapping groups to colors
-	color.init().jsfree("color = d3").scale().category10()
+	color.init("color").scale().category10()
 
 	// Creates a string containing the color function/scale definitions
 	colorString = d3static.cont((cValue, color))
@@ -257,30 +157,30 @@ void d3scatterTip(string scalar filename, string scalar dataset,
 
 	// Creates the points in the scatterplot and calls the tooltip method on 
 	// mouse over events
-	svgtip.init().jsfree("svg").selectAll(".dot").data("obj_data").enter().append("circle").attr("class", "dot").attr("r", 5).attr("cx", "obj_xMap").attr("cy", "obj_yMap").style("fill", "function(d) { return color(cValue(d));}").on("mouseover", `"function(d) { tooltip.transition().duration(200).style("opacity", .9); "' + `"tooltip.html(d[tip]).style("left", (d3.event.pageX + 5) + "px").style("top", (d3.event.pageY - 28) + "px");}"').on("mouseout", `"function(d) { tooltip.transition().duration(500).style("opacity", 0);}"')
+	svgtip.jsfree("svg").selectAll(".dot").data("obj_data").enter().append("circle").attr("class", "dot").attr("r", 5).attr("cx", "obj_xMap").attr("cy", "obj_yMap").style("fill", "function(d) { return color(cValue(d));}").on("mouseover", `"function(d) { tooltip.transition().duration(200).style("opacity", .9); "' + `"tooltip.html(d[tip]).style("left", (d3.event.pageX + 5) + "px").style("top", (d3.event.pageY - 28) + "px");}"').on("mouseout", `"function(d) { tooltip.transition().duration(500).style("opacity", 0);}"')
 
 	// Object that will attach a y-axis to the graph
-	svgYAxis.init().jsfree("svg").append("g").attr("class", "y axis").call("obj_yAxis").append("text").attr("class", "label").attr("transform", "rotate(-90)").attr("y", "obj_ytiPosY").attr("x", "obj_ytiPosX").style("text-anchor", "end").text("obj_varlabels[yvar]")
+	svgYAxis.jsfree("svg").append("g").attr("class", "y axis").call("obj_yAxis").append("text").attr("class", "label").attr("transform", "rotate(-90)").attr("y", "obj_ytiPosY").attr("x", "obj_ytiPosX").style("text-anchor", "end").text("obj_varlabels[yvar]")
 
 	// Object that attaches an x-axis to the graph
-	svgXAxis.init().jsfree("svg").append("g").attr("class", "x axis").attr("transform", `""translate(0," + height + ")""').call("obj_xAxis").append("text").attr("class", "label").attr("x", "obj_xtiPosX").attr("y", 30).attr("font-size", "14px").style("text-anchor", "middle").text("obj_varlabels[xvar]")
+	svgXAxis.jsfree("svg").append("g").attr("class", "x axis").attr("transform", `""translate(0," + height + ")""').call("obj_xAxis").append("text").attr("class", "label").attr("x", "obj_xtiPosX").attr("y", 30).attr("font-size", "14px").style("text-anchor", "middle").text("obj_varlabels[xvar]")
 
 	/* The majority of the work for the graph creation is handled in the body of 
 	the function defined as a the callback to the .json() method.  
 	char((10, 32, 32)) inserts a new line followed by two spaces to indent the 
 	lines slightly as content is added. */
-	json.init().jsfree("d3").json(dataset, `"function(error, json) {"' + char((10, 32, 32)) + `"if (error) return console.warn(error);"' + char((10, 32, 32)) + `"data = json.data;"' + char((10, 32, 32)) + `"varlabels = json["variableLabels"], "' + char((10, 32, 32)) + `"valueLabels = json["valueLabels"], "' + char((10, 32, 32)) + `"varnames = json["variableNames"];"' + char((10, 32, 32)) + xDomain + char((10, 32, 32)) + yDomain + char((10, 32, 32)) + svgXAxis.complete() + char((10, 32, 32)) + svgYAxis.complete() + char((10, 32, 32)) + svgtip.complete() + legendString + char((10)) + `"}"')
+	json.jsfree("d3").json(dataset, `"function(error, json) {"' + char((10, 32, 32)) + `"if (error) return console.warn(error);"' + char((10, 32, 32)) + `"data = json.data.data;"' + char((10, 32, 32)) + `"varlabels = json.variableLabels, "' + char((10, 32, 32)) + `"valueLabels = json.valueLabels, "' + char((10, 32, 32)) + `"varnames = json.variableNames;"' + char((10, 32, 32)) + xDomain + char((10, 32, 32)) + yDomain + char((10, 32, 32)) + svgXAxis.complete() + char((10, 32, 32)) + svgYAxis.complete() + char((10, 32, 32)) + svgtip.complete() + legendString + char((10)) + `"}"')
 
 	/* Object that creates a new JavaScript function named scatter that accepts
 	four arguments: an x-axis variable, a y-axis variable, a variable indicating 
 	how points are grouped, and a variable to use for the tooltip labels.  This 
 	method uses a combination of strings that were previously created, calls to 
 	the printer method, and references to static members of the d3 class. */
-	scatterplot.init().jsfree(marginString + "var scatter = function(xvar, yvar, groups, tip) {" + svg.nlindent + xString + svg.nlindent + yString + svg.nlindent + colorString + svg.nlindent + d3static.printer((svg, toolTip, data, labels, json)) + svg.nl + "}")
+	scatterplot.jsfree(marginString + "var scatter = function(xvar, yvar, groups, tip) {" + svg.nlindent + xString + svg.nlindent + yString + svg.nlindent + colorString + svg.nlindent + d3static.printer((svg, toolTip, data, labels, json)) + svg.nl + "}")
 
 	// This takes the variable names passed from the Mata function and inserts 
 	// them into the JavaScript code that will be output from the method.
-	scatterCall.init().jsfree("scatter(" + d3static.checkValue(xvar) + ", " + 
+	scatterCall.jsfree("scatter(" + d3static.checkValue(xvar) + ", " + 
 	d3static.checkValue(yvar) + ", " + d3static.checkValue(group) + ", " + 
 	d3static.checkValue(labvar) + ")")
 
